@@ -59,11 +59,13 @@ double Vector::norme() const {return sqrt(*this * *this);}
 
 //vecteur unitaire
 Vector Vector::Unit() const {	
-	if (norme() == 0) {
+	double l = norme();
+
+	if (l == 0) {
 		throw std::runtime_error("Vecteur nul");
 	}
 
-	return *this * (1 / norme());
+	return *this * (1 / l);
 }
 
 std::ostream& operator<<(std::ostream& os, const Vector& v){
