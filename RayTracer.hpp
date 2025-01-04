@@ -47,6 +47,29 @@ class Vector{
 Vector operator*(double a, const Vector& v);			//produit avec un scalaire à gauche
 std::ostream& operator<<(std::ostream& os, const Vector& v);	//insertion dans un flux (print)
 
-
+class Ray{
+	private:
+		Vector Origin;		//point d'origine du rayon
+		Vector Direction;	//direction du rayon
+		
+	public:
+		Ray() : Ray(Vector(),Vector(1,1,1).Unit())
+			{}
+			
+		Ray(const Ray& a) : Ray(a.getOrigin(), a.getDirection())
+			{}
+		
+		Ray(Vector ori, Vector dir) : Origin(ori) , Direction(dir.Unit())
+			{}
+		
+		const Vector& getOrigin() const;	//getter origin
+		const Vector& getDirection() const;	//getter direction
+		
+		void setOrigin(const Vector& o);		//setter origin
+		void setDirection(const Vector& v);		//setter direction	
+		
+		Vector position(double t);		//retrouve la position du rayon selon le paramètre t
+};
+std::ostream& operator<<(std::ostream& os, const Ray& r);	//insertion dans un flux (print)
 
 #endif
