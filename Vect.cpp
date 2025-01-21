@@ -43,6 +43,7 @@ double Vect::operator*(const Vect& other) const {return x * other.getX() + y * o
 
 //produit avec un scalaire
 Vect Vect::operator*(double a) const {return Vect(x * a, y * a, z * a);}
+Vect Vect::operator/(double a) const {return *this * (1.0 / a);}
 Vect operator*(double a, const Vect& v) {return v * a;}
 
 //produit Vectoriel	

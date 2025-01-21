@@ -37,12 +37,13 @@ class Vect{
 	
 		double operator*(const Vect& other) const;	//produit scalaire
 		Vect operator*(double a) const;	//produit avec un scalaire	
+		Vect operator/(double a) const;	//division par un scalaire	
 		Vect operator^(const Vect& other) const;	//produit Vectiel	
 		
 		
 		double norme() const;	//norme
 		Vect Unit() const;	//vecteur unitaire		
-};
+}; 
 
 Vect operator*(double a, const Vect& v);			//produit avec un scalaire à gauche
 std::ostream& operator<<(std::ostream& os, const Vect& v);	//insertion dans un flux (print)
