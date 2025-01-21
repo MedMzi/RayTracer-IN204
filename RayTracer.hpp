@@ -4,21 +4,21 @@
 #include <iostream>
 #include <cmath>
 
-class Vector{
+class Vect{
 	private:
 		double x,y,z;
 	
 	public:
-		Vector() : Vector(0,0,0)
+		Vect() : Vect(0,0,0)
 			{}
 		
-		Vector(double a) : Vector(a,a,a) 
+		Vect(double a) : Vect(a,a,a) 
 			{}
 			
-		Vector(const Vector& a) : Vector(a.getX(), a.getY(), a.getZ())
+		Vect(const Vect& a) : Vect(a.getX(), a.getY(), a.getZ())
 			{}
 		
-		Vector(double x, double y, double z) : x(x), y(y), z(z)
+		Vect(double x, double y, double z) : x(x), y(y), z(z)
 			{}
 	    		
 	    	double getX() const;	//getter X
@@ -29,46 +29,46 @@ class Vector{
 		void setY(double Y);	//setter Y
 		void setZ(double Z);	//setter Z
 		
-		Vector operator+(const Vector& other) const;	//addition 
-		Vector& operator+=(const Vector& a);
-		Vector operator-() const;			//soustraction
-		Vector operator-(const Vector& other) const;	
-		Vector& operator-=(const Vector& a); 
+		Vect operator+(const Vect& other) const;	//addition 
+		Vect& operator+=(const Vect& a);
+		Vect operator-() const;			//soustraction
+		Vect operator-(const Vect& other) const;	
+		Vect& operator-=(const Vect& a); 
 	
-		double operator*(const Vector& other) const;	//produit scalaire
-		Vector operator*(double a) const;	//produit avec un scalaire	
-		Vector operator^(const Vector& other) const;	//produit vectoriel	
+		double operator*(const Vect& other) const;	//produit scalaire
+		Vect operator*(double a) const;	//produit avec un scalaire	
+		Vect operator^(const Vect& other) const;	//produit Vectiel	
 		
 		
 		double norme() const;	//norme
-		Vector Unit() const;	//vecteur unitaire		
+		Vect Unit() const;	//vecteur unitaire		
 };
 
-Vector operator*(double a, const Vector& v);			//produit avec un scalaire à gauche
-std::ostream& operator<<(std::ostream& os, const Vector& v);	//insertion dans un flux (print)
+Vect operator*(double a, const Vect& v);			//produit avec un scalaire à gauche
+std::ostream& operator<<(std::ostream& os, const Vect& v);	//insertion dans un flux (print)
 
 class Ray{
 	private:
-		Vector Origin;		//point d'origine du rayon
-		Vector Direction;	//direction du rayon
+		Vect Origin;		//point d'origine du rayon
+		Vect Direction;	//direction du rayon
 		
 	public:
-		Ray() : Ray(Vector(),Vector(1,1,1).Unit())
+		Ray() : Ray(Vect(),Vect(1,1,1).Unit())
 			{}
 			
 		Ray(const Ray& a) : Ray(a.getOrigin(), a.getDirection())
 			{}
 		
-		Ray(Vector ori, Vector dir) : Origin(ori) , Direction(dir.Unit())
+		Ray(Vect ori, Vect dir) : Origin(ori) , Direction(dir.Unit())
 			{}
 		
-		const Vector& getOrigin() const;	//getter origin
-		const Vector& getDirection() const;	//getter direction
+		const Vect& getOrigin() const;	//getter origin
+		const Vect& getDirection() const;	//getter direction
 		
-		void setOrigin(const Vector& o);		//setter origin
-		void setDirection(const Vector& v);		//setter direction	
+		void setOrigin(const Vect& o);		//setter origin
+		void setDirection(const Vect& v);		//setter direction	
 		
-		Vector position(double t);		//retrouve la position du rayon selon le paramètre t
+		Vect position(double t);		//retrouve la position du rayon selon le paramètre t
 };
 std::ostream& operator<<(std::ostream& os, const Ray& r);	//insertion dans un flux (print)
 
