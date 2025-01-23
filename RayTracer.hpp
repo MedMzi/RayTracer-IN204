@@ -3,6 +3,10 @@
 
 #include <iostream>
 #include <cmath>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <fstream>
 
 class Vect{
 	private:
@@ -21,7 +25,7 @@ class Vect{
 		Vect(double x, double y, double z) : x(x), y(y), z(z)
 			{}
 	    		
-	    	double getX() const;	//getter X
+	    double getX() const;	//getter X
 		double getY() const;	//getter Y
 		double getZ() const;	//getter Z
 		
@@ -40,6 +44,7 @@ class Vect{
 		Vect operator/(double a) const;	//division par un scalaire	
 		Vect operator^(const Vect& other) const;	//produit Vectiel	
 		
+		double operator[](int index) const; //pour pouvoir creer certaine boucle sur les dimensions
 		
 		double norme() const;	//norme
 		Vect Unit() const;	//vecteur unitaire		

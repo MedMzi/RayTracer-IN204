@@ -9,7 +9,7 @@ void Ray::setOrigin(const Vect& o) {Origin = o;}
 void Ray::setDirection(const Vect& v) {Direction = v.Unit();}
 
 //position
-Vect Ray::position(double t) { return Origin + t*Direction ;}
+Vect Ray::position(double t) const { return Origin + t*Direction ;}
 
 //flux
 std::ostream& operator<<(std::ostream& os, const Ray& r){
