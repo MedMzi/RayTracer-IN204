@@ -11,7 +11,7 @@ private:
 public:
     Sphere(const Vect& center, double radius) : center(center), radius(std::fmax(0, radius)) {}
 
-    bool hit(const Ray& r, double ray_tmin, double ray_tmax, RayIntersection& rec) const override {
+    bool intersect(const Ray& r, double ray_tmin, double ray_tmax, RayIntersection& rec) const override {
         Vect oc = center - r.getOrigin(); // Vecteur entre le centre de la sphère et l'origine du rayon
         auto a = r.getDirection() * r.getDirection(); // Coefficient 'a' (longueur au carré de la direction)
         auto b = -2.0 * (r.getDirection() * oc); // Coefficient 'b'
