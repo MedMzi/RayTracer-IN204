@@ -16,6 +16,7 @@ add_executable(raytracer
     Rectangle.cpp
     Triangle.cpp
     dotobj.cpp
+    Camera.cpp
 )
 
 # Include directories
