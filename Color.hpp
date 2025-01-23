@@ -6,7 +6,7 @@
 
 using color = Vect;
 
-void write_color(std::ostream& out, const color& pixel_color) {
+inline void write_color(std::ostream& out, const color& pixel_color) {
     // Récupérer les composantes de la couleur
     auto r = pixel_color.getX();
     auto g = pixel_color.getY();
