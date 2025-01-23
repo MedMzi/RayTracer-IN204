@@ -1,4 +1,4 @@
-ifndef OBJET_HPP
+#ifndef OBJET_HPP
 #define OBJET_HPP
 
 #include "ray.hpp"
