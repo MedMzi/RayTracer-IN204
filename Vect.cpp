@@ -73,6 +73,3 @@ std::ostream& operator<<(std::ostream& os, const Vect& v){
 	os << "(" << v.getX() << ", " << v.getY() << ", " << v.getZ() << ")";
 	return os;	
 }
-
-
-

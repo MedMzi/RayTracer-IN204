@@ -69,7 +69,7 @@ class Ray{
 		void setOrigin(const Vect& o);		//setter origin
 		void setDirection(const Vect& v);		//setter direction	
 		
-		Vect position(double t);		//retrouve la position du rayon selon le paramètre t
+		Vect position(double t) const;		//retrouve la position du rayon selon le paramètre t
 };
 std::ostream& operator<<(std::ostream& os, const Ray& r);	//insertion dans un flux (print)
 
