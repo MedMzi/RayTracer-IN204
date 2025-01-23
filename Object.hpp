@@ -24,13 +24,13 @@ class Sphere : public object{
         Sphere(const Vect& center) : Sphere(center, 1.0) 
             {}
         
-        Sphere(double radius) : Sphere(Vect(), radius) 
+        Sphere(double radius) : Sphere(Vect(), std::fabs(radius)) 
             {}
 
         Sphere(const Sphere& a) : Sphere(a.center, a.radius) 
             {}
         
-        Sphere(const Vect& center, double radius) : center(center), radius(std::fmax(0, radius)) 
+        Sphere(const Vect& center, double radius) : center(center), radius(std::fabs(radius)) 
             {}
 
         const Vect& getCenter() const;
