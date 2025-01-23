@@ -73,3 +73,17 @@ std::ostream& operator<<(std::ostream& os, const Vect& v){
 	os << "(" << v.getX() << ", " << v.getY() << ", " << v.getZ() << ")";
 	return os;	
 }
+
+double Vect::operator[](int index) const {
+		index %= 3;
+
+		switch (index) {
+            case 0: return x;
+            case 1: return y;
+            case 2: return z;
+            default: throw std::out_of_range("Index out of range");
+        }
+    }
+
+
+
