@@ -1,5 +1,5 @@
 #include "Camera.hpp"
-void initialize() {
+void Camera::initialize() {
         image_height = int(image_width / aspect_ratio);
         image_height = (image_height < 1) ? 1 : image_height;
 
