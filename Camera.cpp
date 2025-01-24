@@ -43,7 +43,9 @@ void camera::render(const object& world) {
 color camera::ray_color(const Ray& r, const object& world) const {
     double t = world.hit(r);
     if (t > 0.0) {
-        return Vect(1, 0, 0);
+ //       return Vect(1, 0, 0); 
+ //       return Vect(1, 0, 1) * (1.0 / (1.0 + 0.1 * t)); 
+        return Vect(0.5 * (1 + sin( 5*t)), 0.5 * (1 + sin( 5*t + 2.0)), 0.5 * (1 + sin( 5*t + 4.0))) * (1.0 / (1.0 + 0.1 * t)); 
     }
 
     Vect unit_direction = r.getDirection().Unit();
