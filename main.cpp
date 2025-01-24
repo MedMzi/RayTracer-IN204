@@ -25,6 +25,9 @@ int main(int argc, char** argv) {
 
     cam.render(w, image_file);
 
+    std::cout << "Image générée dans le fichier 'output.ppm'.\n";
+    image_file.close();
+
     return 0;
 }
 
