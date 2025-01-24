@@ -8,7 +8,7 @@ class camera {
     double aspect_ratio = 1.0;  // Ratio of image width over height
     int    image_width  = 100;  // Rendered image width in pixel count
 
-    void render(const object& world) ;
+    void render(const object& world, std::ostream& out) ;
 
   private:
     int    image_height;   // Rendered image height

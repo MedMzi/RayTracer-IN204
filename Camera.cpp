@@ -24,10 +24,10 @@ void camera::initialize() {
         pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
     }
 
-void camera::render(const object& world) {
+void camera::render(const object& world, std::ostream& out) {
     initialize();
 
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+    out << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     for (int j = image_height-1; j >= 0; --j) {
         for (int i = 0; i < image_width; ++i) {
@@ -35,7 +35,7 @@ void camera::render(const object& world) {
             Ray r = Ray(center, pixel00_loc + i*pixel_delta_u + j*pixel_delta_v - center);
             auto pixel_color = ray_color(r, world);
 
-            write_color(std::cout, pixel_color);
+            write_color(out, pixel_color);
         }
     }
 }
