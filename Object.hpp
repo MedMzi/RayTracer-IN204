@@ -157,4 +157,26 @@ class dotobj : public object {  // for .obj file
         virtual double hit(const Ray& r) const override;
 };
 
+class world : public object {
+    private:
+        std::vector<object*> objects;
+
+    public:
+        world() : objects()
+            {}
+
+        world(const world& a) : objects(a.objects)
+            {}
+
+        ~world() {
+            for (object* obj : objects) {
+                delete obj;
+            }
+        }
+
+        void add(object* obj);
+
+        virtual double hit(const Ray& r) const override;
+};
+
 #endif

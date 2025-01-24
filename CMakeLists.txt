@@ -17,6 +17,7 @@ add_executable(raytracer
     Triangle.cpp
     dotobj.cpp
     Camera.cpp
+    World.cpp
 )
 
 # Include directories
