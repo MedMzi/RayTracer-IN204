@@ -68,12 +68,18 @@ double Rectangle::hit(const Ray& r) const {     // on utilise l'algorithme "Slab
 const Vect& Rectangle::getNormal(const Vect& p) const {
     float epsilon = 0.0000000001f;
 
-    if (fabs(p.getZ() - minCorner.getZ()) < epsilon) {
-        norm = Vect(0.0, 0.0, -1.0); 
-        return norm;
-    }
     if (fabs(p.getZ() - maxCorner.getZ()) < epsilon) {
         norm = Vect(0.0, 0.0, 1.0);  
+        return norm;
+    }
+
+    if (fabs(p.getX() - maxCorner.getX()) < epsilon) {
+        norm = Vect(1.0, 0.0, 0.0);  
+        return norm;
+    }
+
+   if (fabs(p.getY() - maxCorner.getY()) < epsilon) {
+        norm = Vect(0.0, 1.0, 0.0);  
         return norm;
     }
 
@@ -81,23 +87,16 @@ const Vect& Rectangle::getNormal(const Vect& p) const {
         norm = Vect(-1.0, 0.0, 0.0);  
         return norm;
     }
-    if (fabs(p.getX() - maxCorner.getX()) < epsilon) {
-        norm = Vect(1.0, 0.0, 0.0);  
-        return norm;
-    }
-
 
     if (fabs(p.getY() - minCorner.getY()) < epsilon) {
         norm = Vect(0.0, -1.0, 0.0);  
         return norm;
     }
-    if (fabs(p.getY() - maxCorner.getY()) < epsilon) {
-        norm = Vect(0.0, 1.0, 0.0);  
+
+    if (fabs(p.getZ() - minCorner.getZ()) < epsilon) {
+        norm = Vect(0.0, 0.0, -1.0); 
         return norm;
     }
-
-
-
 
     // pour eviter les erreurs
     return norm;
