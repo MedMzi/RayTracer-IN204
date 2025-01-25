@@ -112,19 +112,33 @@ void loadScene(const char* filePath, world& w, camera& cam) {
                     w.add(new Sphere(Vect(x, y, z), radius));
                 }
             } else if (std::string(type) == "rectangle") {
-                    // Charger un objet de type Rectangle
-                    XMLElement* position = object->FirstChildElement("position");
-                    if (position) {
-                        double x = position->DoubleAttribute("x");
-                        double y = position->DoubleAttribute("y");
-                        double z = position->DoubleAttribute("z");
-                        double radius = object->FirstChildElement("radius")->DoubleText();
-                        Vect v = Vect(x,y,z);
-                    
+                // Charger un objet de type Rectangle
+                XMLElement* position = object->FirstChildElement("position");
+                if (position) {
+                    double x = position->DoubleAttribute("x");
+                    double y = position->DoubleAttribute("y");
+                    double z = position->DoubleAttribute("z");
 
-                        w.add(new Rectangle(v, radius));
+                    XMLElement* sizeElement = object->FirstChildElement("size");
+                    XMLElement* dimensionsElement = object->FirstChildElement("dimensions");
+
+                    if (sizeElement) {
+                        // Si l'élément 'size' est présent, le rectangle est défini par deux coins opposés
+                        double x2 = sizeElement->DoubleAttribute("x2");
+                        double y2 = sizeElement->DoubleAttribute("y2");
+                        double z2 = sizeElement->DoubleAttribute("z2");
+
+                        w.add(new Rectangle(Vect(x, y, z), Vect(x2, y2, z2)));
+                    } else if (dimensionsElement) {
+                        // Si l'élément 'dimensions' est présent, le rectangle est défini par un centre et des dimensions
+                        double a = dimensionsElement->DoubleAttribute("a");
+                        double b = dimensionsElement->DoubleAttribute("b");
+                        double c = dimensionsElement->DoubleAttribute("c");
+
+                        w.add(new Rectangle(Vect(x, y, z), a, b, c));
                     }
                 }
+            }
         }
     }
 }
