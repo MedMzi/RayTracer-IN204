@@ -1,13 +1,14 @@
 #ifndef CAMERA_H
 #define CAMERA_H
-#include "RayTracer.hpp"
+
 #include "Object.hpp"
 #include "Rand.hpp"
 
 class camera {
   public:
     double aspect_ratio = 1.0;  // Ratio of image width over height
-    int    image_width  = 100;  // Rendered image width in pixel count
+    int image_width  = 100;  // Rendered image width in pixel count
+    int samples_per_pixel = 10; 
 
     void render(const object& world, std::ostream& out) ;
 
@@ -18,9 +19,15 @@ class camera {
     Vect   pixel_delta_u;  // Offset to pixel to the right
     Vect   pixel_delta_v;  // Offset to pixel below
 
+    double pixel_sample_scale;  // Scale factor for pixel samples
+
 
     void initialize() ;
 
     color ray_color(const Ray& r, const object& world) const;
+
+    Ray get_ray(int i, int j) const;
+
+    Vect sample_square() const;
 };
 #endif

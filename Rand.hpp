@@ -34,4 +34,10 @@ inline Vect random_on_hemisphere(const Vect& normal) {
         return -on_unit_sphere;
 }
 
+inline double clamp(double x, double min = 0.0, double max=0.999) {
+        if (x < min) return min;
+        if (x > max) return max;
+        return x;
+    }
+
 #endif
