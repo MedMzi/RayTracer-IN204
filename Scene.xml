@@ -1,0 +1,17 @@
+<scene>
+    <camera>
+        <aspect_ratio>1.7</aspect_ratio>
+        <image_width>400</image_width>
+        <samples_per_pixel>100</samples_per_pixel>
+    </camera>
+    <objects>
+        <object type="sphere">
+            <position x="0" y="0" z="-1" />
+            <radius>0.5</radius>
+        </object>
+        <object type="sphere">
+            <position x="0" y="-100.5" z="-1" />
+            <radius>100</radius>
+        </object>
+    </objects>
+</scene>
