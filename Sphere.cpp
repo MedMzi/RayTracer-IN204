@@ -12,6 +12,11 @@ const double Sphere::volume() const {
     return 4.0/3.0 * M_PI * radius * radius * radius;
 }
 
+const Vect& Sphere::getNormal(const Vect& p) const{
+    norm = (p - center).Unit();
+    return norm;
+}
+
 //hit
 double Sphere::hit(const Ray& r) const {
     Vect oc = center - r.getOrigin();

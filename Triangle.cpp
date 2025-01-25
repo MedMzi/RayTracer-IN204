@@ -11,14 +11,8 @@ void Triangle::setB(const Vect& b) {B = b;}
 void Triangle::setC(const Vect& c) {C = c;}
 
 //geométrie
-const Vect Triangle::normal() const{
-    Vect edge1 = B - A;
-    Vect edge2 = C - A;
-    return edge1^edge2;
-}
-
 const double Triangle::area() const{
-    return 0.5 * normal().norme();
+    return 0.5 * getNormal().norme();
 }
 
 

@@ -7,11 +7,16 @@
 class object {
     protected:
         mutable Vect center;
+        mutable Vect norm;
     public:
         virtual ~object() {}
         object() {}
 
         virtual double hit(const Ray& r) const = 0;
+        virtual const Vect& getNormal(const Vect& p = Vect()) const {
+            return norm;
+        };
+
         inline const Vect& getCenter() const { return center; };
 };
 
@@ -32,17 +37,17 @@ class RayIntersection {
             {}
 
         RayIntersection(const object& obj, const Ray& r){
-            t = obj.hit(r);
+            t = obj.hit(r); //hit va donc trouver t mais aussi changer la norme pour l'appel de getNormal()
             p = r.position(t); 
-            normal = (p - obj.getCenter()).Unit() ;
+            normal = obj.getNormal(p) ;
             isOut = r.getDirection()*normal < 0 ;
-           // normal = isOut ? normal : -normal;
+            normal = isOut ? normal : -normal;
         }
 
-        const Vect& getPoint();
-        const Vect& getNormal();
-        double getHit();
-        bool isOutside();
+        const Vect& getPoint() const;
+        const Vect& getNormal() const;
+        double getHit() const;
+        bool isOutside() const;
 
 
 
@@ -65,8 +70,9 @@ class Sphere : public object{
         Sphere(const Sphere& a) : Sphere(a.center, a.radius) 
             {}
         
-        Sphere(const Vect& Center, double radius) : radius(std::fabs(radius)) 
-            {center = Center;}
+        Sphere(const Vect& Center, double radius) : radius(std::fabs(radius)) {
+            center = Center;
+            }
 
         double getRadius() const;
 
@@ -75,6 +81,7 @@ class Sphere : public object{
 
         //geometrie
         const double volume() const;    //volume
+        virtual const Vect& getNormal(const Vect& p) const override;
 
         virtual double hit(const Ray& r) const override;
 
@@ -125,6 +132,7 @@ public:
     const double surfaceab() const; //surface du cote ab
     const double surfacebc() const; //surface du cote bc
     const double surfaceca() const; //surface du cote ca
+    virtual const Vect& getNormal(const Vect& p) const override;
 
     void setMinCorner(const Vect& c);
     void setMaxCorner(const Vect& c);
@@ -145,8 +153,12 @@ class Triangle : public object {
         Triangle(const Triangle& a) : Triangle(a.A, a.B, a.C)
             {}
 
-        Triangle(const Vect& a, const Vect& b, const Vect& c) : A(a), B(b), C(c)
-            {center = (A + B + C) / 3;}
+        Triangle(const Vect& a, const Vect& b, const Vect& c) : A(a), B(b), C(c){
+            center = (A + B + C) / 3;
+            Vect edge1 = B - A;
+            Vect edge2 = C - A;
+            norm = edge1^edge2;
+        }
 
         const Vect& getA() const;
         const Vect& getB() const;
@@ -157,7 +169,6 @@ class Triangle : public object {
         void setC(const Vect& c);
 
         //geometrie
-        const Vect normal() const;  //normale
         const double area() const;  //aire
 
         virtual double hit(const Ray& r) const override;
@@ -169,11 +180,13 @@ class dotobj : public object {  // for .obj file
         Vect position;
 
     public:
-        dotobj() : triangles() , position(Vect())
-            {center = Vect();}
+        dotobj() : triangles() , position(Vect()){
+            center = Vect();
+        }
 
-        dotobj(const dotobj& a) : triangles(a.triangles) , position(a.position)
-            {center = a.getCenter();}
+        dotobj(const dotobj& a) : triangles(a.triangles) , position(a.position){
+            center = a.getCenter();
+        }
 
         dotobj(const std::string& filename) : dotobj(filename, Vect()) 
             {}
@@ -205,11 +218,13 @@ class world : public object {
         std::vector<object*> objects;
 
     public:
-        world() : objects()
-            {center = Vect();}
+        world() : objects(){
+            center = Vect();
+        }
 
-        world(const world& a) : objects(a.objects)
-            {center = a.getCenter();}
+        world(const world& a) : objects(a.objects){
+            center = a.getCenter();
+        }
 
         ~world() {
             for (object* obj : objects) {

@@ -55,6 +55,8 @@ double dotobj::hit(const Ray& r) const {
             double t = triangle.hit(r);
             if (t > 0.0 && t < tmin) {
                 tmin = t;
+                center = triangle.getCenter();
+                norm = triangle.getNormal();
             }
         }
         return tmin;

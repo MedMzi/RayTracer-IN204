@@ -12,6 +12,7 @@ double world::hit(const Ray& r) const {
         if ((hit < closest) && (hit > 0.0)) {
             closest = hit;
             center = obj->getCenter();
+            norm = obj->getNormal(r.position(closest));
         }
     }
     if (closest == INFINITY) {
