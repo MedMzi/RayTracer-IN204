@@ -45,6 +45,7 @@ class Vect{
 		Vect operator^(const Vect& other) const;	//produit Vectiel	
 		
 		double operator[](int index) const; //pour pouvoir creer certaine boucle sur les dimensions
+		bool negligeable() const;	//pour savoir si le vecteur est negligeable
 		
 		double norme() const;	//norme
 		Vect Unit() const;	//vecteur unitaire		

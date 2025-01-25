@@ -40,4 +40,8 @@ inline double clamp(double x, double min = 0.0, double max=0.999) {
         return x;
     }
 
+inline Vect reflect(const Vect& v, const Vect& n) {
+    return v - 2*(v*n)*n;
+}
+
 #endif

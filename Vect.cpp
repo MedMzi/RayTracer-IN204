@@ -85,5 +85,10 @@ double Vect::operator[](int index) const {
         }
     }
 
+bool Vect::negligeable() const {
+	// Return true if the vector is close to zero in all dimensions.
+    auto s = 1e-8;
+    return ((std::fabs(x) < s) && (std::fabs(y) < s) && (std::fabs(z) < s)) ;
+}
 
 

@@ -1,4 +1,5 @@
 #include "Camera.hpp"
+#include "Material.hpp"
 
 void camera::initialize() {
         image_height = int(image_width / aspect_ratio);
@@ -46,18 +47,28 @@ void camera::render(const object& world, std::ostream& out) {
 }
 
 color camera::ray_color(const Ray& r, const object& world, int depth) const {
-    if (depth <= 0)
-        return color(0,0,0);
+    if (depth <= 0){
+     //   std::cout << "max reached" << std::endl;
+        return color();
+    }    
 
     RayIntersection inters = RayIntersection(world, r);
     double t = inters.getHit();
-    if (t > 0.0) {
+    if ((t > 0.0) && (inters.mat != nullptr)) {
  //       return Vect(1, 0, 0); 
  //       return Vect(1, 0, 1) * (1.0 / (1.0 + 0.1 * t)); 
 //       return 0.5 * (inters.getNormal() + color(1));
     //    Vect direction = random_on_hemisphere(inters.getNormal());
-        Vect direction = inters.getNormal() + random_unit_vector();
-        return 0.1 * ray_color(Ray(inters.getPoint(), direction), world, depth-1);
+ //       Vect direction = inters.getNormal() + random_unit_vector();
+ //       return 0.1 * ray_color(Ray(inters.getPoint(), direction), world, depth-1);
+        Ray scattered;
+        color attenuation;
+        if (inters.mat->scatter(r, inters, attenuation, scattered)){
+            auto rec = ray_color(scattered, world, depth-1);
+            auto res = color(attenuation.getX()*rec.getX(), attenuation.getY()*rec.getY(), attenuation.getZ()*rec.getZ());
+            return res;
+        }
+        return color();
     }
 
     Vect unit_direction = r.getDirection().Unit();

@@ -3,16 +3,24 @@
 
 #include "Color.hpp"
 
+class material;
+
 class object {
     protected:
         mutable Vect center;
         mutable Vect norm;
     public:
+        mutable material* mat;
+
         double ray_tmin = 0.0001;
         double ray_tmax = INFINITY;
 
         virtual ~object() {}
-        object() {}
+        
+        object() : object(nullptr) 
+            {}
+        object(material* m) : mat(m)
+             {}
 
         virtual double hit(const Ray& r) const = 0;
         virtual const Vect& getNormal(const Vect& p = Vect()) const {
@@ -20,6 +28,7 @@ class object {
         };
 
         inline const Vect& getCenter() const { return center; };
+
 };
 
 
@@ -40,17 +49,20 @@ class RayIntersection {
             {}
 
         RayIntersection(const object& obj, const Ray& r){
-            t = obj.hit(r); //hit va donc trouver t mais aussi changer la norme pour l'appel de getNormal()
+            t = obj.hit(r); //hit va donc trouver t mais aussi changer la norme pour l'appel de getNormal() ainsi que mat
             p = r.position(t); 
             normal = obj.getNormal(p) ;
             isOut = r.getDirection()*normal < 0 ;
             normal = isOut ? normal : -normal;
+            mat = obj.mat;
         }
 
         const Vect& getPoint() const;
         const Vect& getNormal() const;
         double getHit() const;
         bool isOutside() const;
+
+        material* mat;
 
 
 
@@ -61,19 +73,19 @@ class Sphere : public object{
         double radius;
     
     public:
-        Sphere() : Sphere(Vect(), 1.0) 
+        Sphere() : Sphere(Vect(), 1.0, nullptr) 
             {}
         
-        Sphere(const Vect& center) : Sphere(center, 1.0) 
+        Sphere(const Vect& center, material* m) : Sphere(center, 1.0, m) 
             {}
         
-        Sphere(double radius) : Sphere(Vect(), std::fabs(radius)) 
+        Sphere(double radius, material* m) : Sphere(Vect(), std::fabs(radius), m) 
             {}
 
-        Sphere(const Sphere& a) : Sphere(a.center, a.radius) 
+        Sphere(const Sphere& a) : Sphere(a.center, a.radius, a.mat) 
             {}
         
-        Sphere(const Vect& Center, double radius) : radius(std::fabs(radius)) {
+        Sphere(const Vect& Center, double radius, material* m) : object(m) , radius(std::fabs(radius)) {
             center = Center;
             }
 
@@ -96,19 +108,19 @@ private:
     Vect maxCorner;
 
 public:
-    Rectangle() : Rectangle(Vect(), Vect(1.0, 1.0, 1.0)) 
+    Rectangle() : Rectangle(Vect(), Vect(1.0, 1.0, 1.0), nullptr) 
         {}
 
-    Rectangle(const Vect& center, double a, double b, double c) : Rectangle(center - Vect(a/2, b/2, c/2), center + Vect(a/2, b/2, c/2))
+    Rectangle(const Vect& center, double a, double b, double c, material* m) : Rectangle(center - Vect(a/2, b/2, c/2), center + Vect(a/2, b/2, c/2), m)
         {}
 
-    Rectangle(const Vect& center, double a) : Rectangle(center - Vect(a/2, a/2, a/2), center + Vect(a/2, a/2, a/2))
+    Rectangle(const Vect& center, double a, material* m) : Rectangle(center - Vect(a/2, a/2, a/2), center + Vect(a/2, a/2, a/2), m)
         {}
 
-    Rectangle(const Rectangle& a) : Rectangle(a.minCorner, a.maxCorner)   
+    Rectangle(const Rectangle& a) : Rectangle(a.minCorner, a.maxCorner, a.mat)   
         {}
 
-    Rectangle(const Vect& corner1, const Vect& corner2){
+    Rectangle(const Vect& corner1, const Vect& corner2, material* m) : object(m) {
         minCorner = Vect(
             fmin(corner1.getX(), corner2.getX()),
             fmin(corner1.getY(), corner2.getY()),
@@ -153,13 +165,13 @@ class Triangle : public object {
         Vect C;
 
     public:
-        Triangle() : Triangle(Vect(), Vect(1.0, 1.0, 1.0), Vect(1.0, 1.0, 1.0))
+        Triangle() : Triangle(Vect(), Vect(1.0, 1.0, 1.0), Vect(1.0, 1.0, 1.0), nullptr)
             {}
 
-        Triangle(const Triangle& a) : Triangle(a.A, a.B, a.C)
+        Triangle(const Triangle& a) : Triangle(a.A, a.B, a.C, a.mat)
             {}
 
-        Triangle(const Vect& a, const Vect& b, const Vect& c) : A(a), B(b), C(c){
+        Triangle(const Vect& a, const Vect& b, const Vect& c, material* m) : object(m), A(a), B(b), C(c){
             center = (A + B + C) / 3;
             Vect edge1 = B - A;
             Vect edge2 = C - A;
@@ -186,18 +198,18 @@ class dotobj : public object {  // for .obj file
         Vect position;
 
     public:
-        dotobj() : triangles() , position(Vect()){
+        dotobj() : object(), triangles() , position(Vect()){
             center = Vect();
         }
 
-        dotobj(const dotobj& a) : triangles(a.triangles) , position(a.position){
+        dotobj(const dotobj& a) : object(), triangles(a.triangles) , position(a.position){
             center = a.getCenter();
         }
 
         dotobj(const std::string& filename) : dotobj(filename, Vect()) 
             {}
 
-        dotobj(const std::string& filename, Vect position) : position(position) {
+        dotobj(const std::string& filename, Vect position) : object(), position(position) {
             loadFromObjFile(filename, position);
             //calcul du centre (barycentre de tout les centres de gravité)
             center = Vect(0, 0, 0); 
@@ -224,11 +236,11 @@ class world : public object {
         std::vector<object*> objects;
 
     public:
-        world() : objects(){
+        world() : object(), objects(){
             center = Vect();
         }
 
-        world(const world& a) : objects(a.objects){
+        world(const world& a) : object(), objects(a.objects){
             center = a.getCenter();
         }
 

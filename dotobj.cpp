@@ -42,7 +42,8 @@ void dotobj::loadFromObjFile(const std::string& filename, Vect position) {
             }
             if (vertexIndices.size() >= 3) {
                 for (size_t i = 1; i < vertexIndices.size() - 1; ++i) {
-                    triangles.push_back(Triangle(vertices[vertexIndices[0]], vertices[vertexIndices[i]], vertices[vertexIndices[i + 1]]));
+                    triangles.push_back(Triangle(vertices[vertexIndices[0]], vertices[vertexIndices[i]], vertices[vertexIndices[i + 1]], nullptr));
+                    //todo remove nullptr here and figure out how to include materials into the dotobj, maybe just a default material for all dotobjs
                 }
             }
         }
@@ -57,6 +58,7 @@ double dotobj::hit(const Ray& r) const {
                 tmin = t;
                 center = triangle.getCenter();
                 norm = triangle.getNormal();
+                mat = triangle.mat;
             }
         }
         if (tmin == ray_tmax) {

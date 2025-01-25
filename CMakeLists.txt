@@ -19,16 +19,8 @@ add_executable(raytracer
     Camera.cpp
     World.cpp
     RayIntersect.cpp
+    Material.cpp
 )
 
 # Include directories
 target_include_directories(raytracer PRIVATE ${CMAKE_SOURCE_DIR})
-
-# Find and link tinyxml2 using pkg-config
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(TINYXML2 REQUIRED tinyxml2)
-
-include_directories(${TINYXML2_INCLUDE_DIRS})
-link_directories(${TINYXML2_LIBRARY_DIRS})
-
-target_link_libraries(raytracer PRIVATE ${TINYXML2_LIBRARIES})

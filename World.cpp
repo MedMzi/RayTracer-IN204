@@ -13,6 +13,7 @@ double world::hit(const Ray& r) const {
             closest = hit;
             center = obj->getCenter();
             norm = obj->getNormal(r.position(closest));
+            mat = obj->mat;
         }
     }
     if (closest == ray_tmax) {
