@@ -9,10 +9,6 @@ void Rectangle::setMinCorner(const Vect& c) {minCorner = c;}
 void Rectangle::setMaxCorner(const Vect& c) {maxCorner = c;}
 
 //geometrie
-const Vect Rectangle::getCenter() const {
-    return (minCorner + maxCorner) / 2;
-}
-
 const double Rectangle::geta() const {
     return maxCorner.getX() - minCorner.getX();
 }

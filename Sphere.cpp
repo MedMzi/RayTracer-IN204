@@ -1,7 +1,6 @@
 #include "Object.hpp"
 
 //getter
-const Vect& Sphere::getCenter() const {return center;}
 double Sphere::getRadius() const {return radius;}
 
 //setter

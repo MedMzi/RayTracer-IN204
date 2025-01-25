@@ -21,9 +21,6 @@ const double Triangle::area() const{
     return 0.5 * normal().norme();
 }
 
-const Vect Triangle::centroid() const{
-    return (A + B + C) / 3;
-}
 
 
 //hit

@@ -66,7 +66,7 @@ Vect Vect::Unit() const {
 		throw std::runtime_error("Vecteur nul");
 	}
 
-	return *this * (1 / l);
+	return *this / l;
 }
 
 std::ostream& operator<<(std::ostream& os, const Vect& v){

@@ -4,17 +4,52 @@
 #include "RayTracer.hpp"
 #include "Color.hpp"
 
-
 class object {
+    protected:
+        Vect center;
     public:
         virtual ~object() {}
+        object() {}
 
         virtual double hit(const Ray& r) const = 0;
+        inline const Vect& getCenter() const { return center; }; 
+};
+
+class RayIntersection {
+    private:
+        Vect p;
+        Vect normal;
+        double t;
+        bool isOut;
+    public:
+        RayIntersection() : RayIntersection(Vect(), Vect(), 0.0, false)
+            {}
+
+        RayIntersection(const RayIntersection& a) : RayIntersection(a.p, a.normal, a.t, a.isOut) 
+            {}
+
+        RayIntersection(Vect point, Vect norm, double x, bool b) : p(point) , normal(norm), t(x), isOut(b)
+            {}
+
+        RayIntersection(const object& obj, const Ray& r){
+            t = obj.hit(r);
+            p = r.position(t); 
+            normal = (p - obj.getCenter()).Unit() ;
+            isOut = r.getDirection()*normal < 0 ;
+            normal = isOut ? normal : -normal;
+        }
+
+        const Vect& getPoint();
+        const Vect& getNormal();
+        double getHit();
+        bool isOutside();
+
+
+
 };
 
 class Sphere : public object{
     private:
-        Vect center;
         double radius;
     
     public:
@@ -30,10 +65,9 @@ class Sphere : public object{
         Sphere(const Sphere& a) : Sphere(a.center, a.radius) 
             {}
         
-        Sphere(const Vect& center, double radius) : center(center), radius(std::fabs(radius)) 
-            {}
+        Sphere(const Vect& Center, double radius) : radius(std::fabs(radius)) 
+            {center = Center;}
 
-        const Vect& getCenter() const;
         double getRadius() const;
 
         void setCenter(const Vect& c);
@@ -75,13 +109,14 @@ public:
             fmax(corner1.getY(), corner2.getY()),
             fmax(corner1.getZ(), corner2.getZ())
         );
+
+        center = (minCorner + maxCorner) / 2;
 }
 
     const Vect& getMinCorner() const;
     const Vect& getMaxCorner() const;
 
     //geometrie
-    const Vect getCenter() const; //centre
     const double geta() const;    //longueur d'un cote
     const double getb() const;    //largeur d'un cote
     const double getc() const;    //hauteur d'un cote
@@ -107,11 +142,11 @@ class Triangle : public object {
         Triangle() : Triangle(Vect(), Vect(1.0, 1.0, 1.0), Vect(1.0, 1.0, 1.0))
             {}
 
-        Triangle(const Vect& a, const Vect& b, const Vect& c) : A(a), B(b), C(c)
-            {}
-
         Triangle(const Triangle& a) : Triangle(a.A, a.B, a.C)
             {}
+
+        Triangle(const Vect& a, const Vect& b, const Vect& c) : A(a), B(b), C(c)
+            {center = (A + B + C) / 3;}
 
         const Vect& getA() const;
         const Vect& getB() const;
@@ -124,7 +159,6 @@ class Triangle : public object {
         //geometrie
         const Vect normal() const;  //normale
         const double area() const;  //aire
-        const Vect centroid() const; //Centre de gravité
 
         virtual double hit(const Ray& r) const override;
 };
@@ -136,17 +170,26 @@ class dotobj : public object {  // for .obj file
 
     public:
         dotobj() : triangles() , position(Vect())
-            {}
+            {center = Vect();}
 
         dotobj(const dotobj& a) : triangles(a.triangles) , position(a.position)
-            {}
+            {center = a.getCenter();}
 
-        dotobj(const std::string& filename) : position(Vect()) {
-            loadFromObjFile(filename);
-        }
+        dotobj(const std::string& filename) : dotobj(filename, Vect()) 
+            {}
 
         dotobj(const std::string& filename, Vect position) : position(position) {
             loadFromObjFile(filename, position);
+            //calcul du centre (barycentre de tout les centres de gravité)
+            center = Vect(0, 0, 0); 
+            double totalArea = 0.0;
+            for (const Triangle& triangle : triangles) {
+                double area = triangle.area();
+                center += triangle.getCenter() * area;    // pondere par la surface du triangle
+                totalArea += area;
+            }
+
+            center = center / totalArea ; 
         }
 
         void loadFromObjFile(const std::string& filename, Vect position = Vect()); //charge un fichier .obj
@@ -163,7 +206,7 @@ class world : public object {
 
     public:
         world() : objects()
-            {}
+            {center = Vect();}
 
         world(const world& a) : objects(a.objects)
             {}
