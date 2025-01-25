@@ -50,14 +50,18 @@ void dotobj::loadFromObjFile(const std::string& filename, Vect position) {
 }
 
 double dotobj::hit(const Ray& r) const {
-        double tmin = INFINITY;
+        double tmin = ray_tmax;
         for (const auto& triangle : triangles) {
             double t = triangle.hit(r);
-            if (t > 0.0 && t < tmin) {
+            if (t > ray_tmin && t < tmin) {
                 tmin = t;
                 center = triangle.getCenter();
                 norm = triangle.getNormal();
             }
         }
+        if (tmin == ray_tmax) {
+            return -1.0;
+        }
+
         return tmin;
     }

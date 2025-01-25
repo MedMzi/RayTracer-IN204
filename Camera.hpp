@@ -2,13 +2,14 @@
 #define CAMERA_H
 
 #include "Object.hpp"
-#include "Rand.hpp"
+#include "Color.hpp"
 
 class camera {
   public:
     double aspect_ratio = 1.0;  // Ratio of image width over height
     int image_width  = 100;  // Rendered image width in pixel count
     int samples_per_pixel = 10; 
+    int max_depth = 10; // limiter le nombre de rebonds pour ne pas avoir de boucle infinie ou de stack overflow
 
     void render(const object& world, std::ostream& out) ;
 
@@ -24,7 +25,7 @@ class camera {
 
     void initialize() ;
 
-    color ray_color(const Ray& r, const object& world) const;
+    color ray_color(const Ray& r, const object& world, int depth) const;
 
     Ray get_ray(int i, int j) const;
 

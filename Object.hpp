@@ -1,7 +1,6 @@
 #ifndef OBJECT_HPP
 #define OBJECT_HPP
 
-#include "RayTracer.hpp"
 #include "Color.hpp"
 
 class object {
@@ -9,6 +8,9 @@ class object {
         mutable Vect center;
         mutable Vect norm;
     public:
+        double ray_tmin = 0.0001;
+        double ray_tmax = INFINITY;
+
         virtual ~object() {}
         object() {}
 
@@ -19,6 +21,7 @@ class object {
 
         inline const Vect& getCenter() const { return center; };
 };
+
 
 class RayIntersection {
     private:
@@ -118,7 +121,10 @@ public:
         );
 
         center = (minCorner + maxCorner) / 2;
-}
+
+        ray_tmin = -INFINITY;
+        ray_tmax = INFINITY;
+    }
 
     const Vect& getMinCorner() const;
     const Vect& getMaxCorner() const;

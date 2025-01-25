@@ -37,7 +37,7 @@ void camera::render(const object& world, std::ostream& out) {
             color pixel_color(0, 0, 0);
             for (int sample = 0; sample < samples_per_pixel; sample++){
                 Ray r = get_ray(i,j);
-                pixel_color += ray_color(r, world);
+                pixel_color += ray_color(r, world, max_depth);
             }
 
             write_color(out, pixel_sample_scale * pixel_color);
@@ -45,15 +45,19 @@ void camera::render(const object& world, std::ostream& out) {
     }
 }
 
-color camera::ray_color(const Ray& r, const object& world) const {
+color camera::ray_color(const Ray& r, const object& world, int depth) const {
+    if (depth <= 0)
+        return color(0,0,0);
+
     RayIntersection inters = RayIntersection(world, r);
     double t = inters.getHit();
     if (t > 0.0) {
  //       return Vect(1, 0, 0); 
  //       return Vect(1, 0, 1) * (1.0 / (1.0 + 0.1 * t)); 
 //       return 0.5 * (inters.getNormal() + color(1));
-        Vect direction = random_on_hemisphere(inters.getNormal());
-        return 0.5 * ray_color(Ray(inters.getPoint(), direction), world);
+    //    Vect direction = random_on_hemisphere(inters.getNormal());
+        Vect direction = inters.getNormal() + random_unit_vector();
+        return 0.1 * ray_color(Ray(inters.getPoint(), direction), world, depth-1);
     }
 
     Vect unit_direction = r.getDirection().Unit();

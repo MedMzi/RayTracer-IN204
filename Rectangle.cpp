@@ -43,8 +43,8 @@ const double Rectangle::surface() const {
 
 //hit
 double Rectangle::hit(const Ray& r) const {     // on utilise l'algorithme "Slab Method"
-    double tmin = -INFINITY;
-    double tmax = INFINITY;
+    double tmin = ray_tmin;
+    double tmax = ray_tmax;
 
     for (int i = 0; i < 3; i++) {
         double t0 = (minCorner[i] - r.getOrigin()[i]) / r.getDirection()[i];

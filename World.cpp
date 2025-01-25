@@ -5,18 +5,18 @@ void world::add(object* obj) {
 }
 
 double world::hit(const Ray& r) const {
-    double closest = INFINITY;
+    double closest = ray_tmax;
  //   center = Vect();
     for (object* obj : objects) {
         double hit = obj->hit(r);
-        if ((hit < closest) && (hit > 0.0)) {
+        if ((hit < closest) && (hit > ray_tmin)) {
             closest = hit;
             center = obj->getCenter();
             norm = obj->getNormal(r.position(closest));
         }
     }
-    if (closest == INFINITY) {
-        return -1;
+    if (closest == ray_tmax) {
+        return -1.0;
     }
 
     return closest;

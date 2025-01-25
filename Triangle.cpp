@@ -38,5 +38,9 @@ double Triangle::hit(const Ray& r) const {      //on utilise l'algorithme de Mö
         return -1.0;
     }
     double t = f * (e2 * q);
-    return t;
+    
+    if (t > ray_tmin && t < ray_tmax) {
+        return t;
+    }
+    return -1.0;
 }
