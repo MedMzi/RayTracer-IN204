@@ -2,6 +2,7 @@
 #define CAMERA_H
 #include "RayTracer.hpp"
 #include "Object.hpp"
+#include "Rand.hpp"
 
 class camera {
   public:
