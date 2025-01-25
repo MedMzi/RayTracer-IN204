@@ -6,13 +6,13 @@
 
 class object {
     protected:
-        Vect center;
+        mutable Vect center;
     public:
         virtual ~object() {}
         object() {}
 
         virtual double hit(const Ray& r) const = 0;
-        inline const Vect& getCenter() const { return center; }; 
+        inline const Vect& getCenter() const { return center; };
 };
 
 class RayIntersection {
@@ -209,7 +209,7 @@ class world : public object {
             {center = Vect();}
 
         world(const world& a) : objects(a.objects)
-            {}
+            {center = a.getCenter();}
 
         ~world() {
             for (object* obj : objects) {

@@ -6,10 +6,12 @@ void world::add(object* obj) {
 
 double world::hit(const Ray& r) const {
     double closest = INFINITY;
+ //   center = Vect();
     for (object* obj : objects) {
         double hit = obj->hit(r);
         if ((hit < closest) && (hit > 0.0)) {
             closest = hit;
+            center = obj->getCenter();
         }
     }
     if (closest == INFINITY) {
