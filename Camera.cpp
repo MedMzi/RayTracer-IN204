@@ -46,7 +46,7 @@ color camera::ray_color(const Ray& r, const object& world) const {
     if (t > 0.0) {
  //       return Vect(1, 0, 0); 
  //       return Vect(1, 0, 1) * (1.0 / (1.0 + 0.1 * t)); 
-        return 0.5 * (inters.getNormal() + color(1,1,1));
+        return 0.5 * (inters.getNormal() + color(1));
     }
 
     Vect unit_direction = r.getDirection().Unit();

@@ -36,7 +36,7 @@ class RayIntersection {
             p = r.position(t); 
             normal = (p - obj.getCenter()).Unit() ;
             isOut = r.getDirection()*normal < 0 ;
-            normal = isOut ? normal : -normal;
+           // normal = isOut ? normal : -normal;
         }
 
         const Vect& getPoint();
