@@ -15,7 +15,11 @@ class object {
         double ray_tmin = 0.0001;
         double ray_tmax = INFINITY;
 
-        virtual ~object() {}
+        virtual ~object() {
+            if (mat != nullptr) {
+                delete mat;
+            }
+        }
         
         object() : object(nullptr) 
             {}
