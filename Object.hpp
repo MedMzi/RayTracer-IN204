@@ -227,6 +227,10 @@ class dotobj : public object {  // for .obj file
             center = center / totalArea ; 
         }
 
+        ~dotobj() {
+            mat = nullptr;
+        }
+
         void loadFromObjFile(const std::string& filename, Vect position = Vect()); //charge un fichier .obj
 
         const std::vector<Triangle>& getTriangles() const;
@@ -252,6 +256,7 @@ class world : public object {
             for (object* obj : objects) {
                 delete obj;
             }
+            mat = nullptr;
         }
 
         void add(object* obj);
