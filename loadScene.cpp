@@ -110,11 +110,22 @@ void loadScene(const char* filePath, world& w, camera& cam) {
                         double z = position->DoubleAttribute("z");
                         double radius = object->FirstChildElement("radius")->DoubleText();
                         //w.add(new Sphere(Vect(x, y, z), radius,  new lambertian(color(0.5,0.5,0.5))));
-                        // Charger le matériau
-                        
+                        // Charger le matérial
                         XMLElement* materialElement = object->FirstChildElement("material");
-               
-                        if (materialElement) {
+                        std::cout << "Material : " << materialElement << std::endl;
+                        if (materialElement ) {
+                            std::cout << "Material : " << materialElement ->GetText() << std::endl;
+                            const char* materialText = materialElement->GetText();
+                            if (std::string(materialText) == "lambertian")
+                            {
+                                XMLElement* co = object->FirstChildElement("color");
+                                if (co) {
+                                    double r = co->DoubleAttribute("r");
+                                    double g = co->DoubleAttribute("g");
+                                    double b = co->DoubleAttribute("b");
+                                    w.add(new Sphere(Vect(x, y, z), radius,  new lambertian(color(r,g,b))));}
+                        } 
+                        /*if (materialElement) {
                             
                             const char* materialType = materialElement->Attribute("type");
 
@@ -184,4 +195,4 @@ void loadScene(const char* filePath, world& w, camera& cam) {
         }*/
     }
 }
-}
+}}
