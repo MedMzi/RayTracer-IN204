@@ -89,59 +89,68 @@ void loadScene(const char* filePath, world& w, camera& cam) {
             cam.focus_dist = focusDistElement->DoubleText();
         }
     }
-    std::vector<material*> materials; // Container to store all allocated materials
+    //std::vector<material*> materials; // Container to store all allocated materials
 
-    //auto ground_material = new lambertian(color(0.5, 0.5, 0.5));
+     
     // Charger les objets
-
+    //material *mat;
     XMLElement* objectsElement = root->FirstChildElement("objects");
     if (objectsElement) {
         for (XMLElement* object = objectsElement->FirstChildElement("object"); object != nullptr; object = object->NextSiblingElement("object")) {
             const char* type = object->Attribute("type");
-
+            
 
                 if (std::string(type) == "sphere") {
                     // Charger un objet de type Sphere
                     XMLElement* position = object->FirstChildElement("position");
+
                     if (position) {
                         double x = position->DoubleAttribute("x");
                         double y = position->DoubleAttribute("y");
                         double z = position->DoubleAttribute("z");
                         double radius = object->FirstChildElement("radius")->DoubleText();
-
+                        //w.add(new Sphere(Vect(x, y, z), radius,  new lambertian(color(0.5,0.5,0.5))));
                         // Charger le matériau
+                        
                         XMLElement* materialElement = object->FirstChildElement("material");
-                        material* mat = nullptr;
-
+               
                         if (materialElement) {
+                            
                             const char* materialType = materialElement->Attribute("type");
+
                             if (std::string(materialType) == "lambertian") {
-                                XMLElement* albedo = materialElement->FirstChildElement("albedo");
+                                XMLElement* albedo = materialElement->FirstChildElement("color");
                                 if (albedo) {
                                     double r = albedo->DoubleAttribute("r");
                                     double g = albedo->DoubleAttribute("g");
                                     double b = albedo->DoubleAttribute("b");
-                                    mat = new lambertian(color(r, g, b));
+                                    //mat = new lambertian(color(r, g, b));
+                                    //w.add(new Sphere(Vect(x, y, z), radius,  new lambertian(color(r, g, b))));
+
                                 }
-                            } else if (std::string(materialType) == "metal") {
+                            }else if (std::string(materialType) == "metal") {
                                 XMLElement* albedo = materialElement->FirstChildElement("albedo");
                                 double fuzz = materialElement->FirstChildElement("fuzz")->DoubleText();
                                 if (albedo) {
                                     double r = albedo->DoubleAttribute("r");
                                     double g = albedo->DoubleAttribute("g");
                                     double b = albedo->DoubleAttribute("b");
-                                    mat = new metal(color(r, g, b), fuzz);
+                                    //mat = new metal(color(r, g, b), fuzz);
+                                    w.add(new Sphere(Vect(x, y, z), radius, new metal(color(r, g, b), fuzz)));
                                 }
                             } else if (std::string(materialType) == "dielectric") {
                                 double refractionIndex = materialElement->FirstChildElement("refraction_index")->DoubleText();
-                                mat = new dielectric(refractionIndex);
+                                //mat = new dielectric(refractionIndex);
+                                w.add(new Sphere(Vect(x, y, z), radius, new dielectric(refractionIndex)));
+
                             }
                         }
 
-                        if (mat) {
-                            materials.push_back(mat);
+                        /*if (mat) {
+                            //materials.push_back(mat);
                             w.add(new Sphere(Vect(x, y, z), radius, mat));
-                        }
+                        }*/
+                       //w.add(new Sphere(Vect(x, y, z), radius,new lambertian(color(0.5, 0.5, 0.5))));
                     }
                 }
                 /*else if (std::string(type) == "rectangle") {
@@ -174,4 +183,5 @@ void loadScene(const char* filePath, world& w, camera& cam) {
             }
         }*/
     }
-}}
+}
+}
