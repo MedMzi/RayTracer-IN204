@@ -88,7 +88,7 @@ void loadScene(const char* filePath, world& w, camera& cam) {
         if (focusDistElement) {
             cam.focus_dist = focusDistElement->DoubleText();
         }
-    }
+    }//l camera jawha ahla jaw 
     //std::vector<material*> materials; // Container to store all allocated materials
 
      
@@ -108,12 +108,12 @@ void loadScene(const char* filePath, world& w, camera& cam) {
                         double x = position->DoubleAttribute("x");
                         double y = position->DoubleAttribute("y");
                         double z = position->DoubleAttribute("z");
-                        double radius = object->FirstChildElement("radius")->DoubleText();
-                        //w.add(new Sphere(Vect(x, y, z), radius,  new lambertian(color(0.5,0.5,0.5))));
+                        double radius = object->FirstChildElement("radius")->DoubleText();//had hnee ya9ra mriguell 
+                        //w.add(new Sphere(Vect(x, y, z), radius,  new lambertian(color(0.5,0.5,0.5))));//kif nzid ligne hedhi w na3tih des valeurs par def yemchi zeda labes 
                         // Charger le matérial
                         XMLElement* materialElement = object->FirstChildElement("material");
-                        std::cout << "Material : " << materialElement << std::endl;
-                        if (materialElement ) {
+                        std::cout << "Material : " << materialElement << std::endl;//hnee ya3tini fi 0 hatitha bech net2ked win l mochkla 
+                        if (materialElement ) {//yaani mech 93ed yodhkhel fel boucle 
                             std::cout << "Material : " << materialElement ->GetText() << std::endl;
                             const char* materialText = materialElement->GetText();
                             if (std::string(materialText) == "lambertian")
