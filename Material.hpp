@@ -49,4 +49,27 @@ class metal : public material {
         virtual bool scatter(const Ray& r_in, const RayIntersection& inters, color& attenuation, Ray& scattered) const override;
 };
 
+class dielectric : public material {
+    private:
+        double refraction_index;
+
+        static double reflectance(double cosine, double refraction_index);
+    
+    public:
+        dielectric() : dielectric(1) 
+            {}
+
+        dielectric(const dielectric& a) : dielectric(a.refraction_index) 
+            {}
+
+        dielectric(double f) : refraction_index(f) 
+            {}
+
+        double getRefractionIndex() const;
+
+        virtual bool scatter(const Ray& r_in, const RayIntersection& inters, color& attenuation, Ray& scattered) const override;
+
+
+};
+
 #endif

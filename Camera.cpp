@@ -7,25 +7,39 @@ void camera::initialize() {
 
         pixel_sample_scale = 1.0 / samples_per_pixel;
 
-        center = Vect();
+        center = lookfrom;
 
         // Determine viewport dimensions.
-        auto focal_length = 1.0;
-        auto viewport_height = 2.0;
+       // auto focal_length = (lookfrom - lookat).norme();
+
+        auto theta = degrees_to_radians(vfov);
+        auto h = std::tan(theta/2);
+       // auto viewport_height = 2 * h * focal_length;
+       auto viewport_height = 2 * h * focus_dist;
+
         auto viewport_width = viewport_height * (double(image_width)/image_height);
 
+        //calcul des vecteurs de la camera
+        w = (lookfrom - lookat).Unit();
+        u = (vup^w).Unit();
+        v = w^u;
+
         // Calculate the vectors across the horizontal and down the vertical viewport edges.
-        auto viewport_u = Vect(viewport_width, 0, 0);
-        auto viewport_v = Vect(0, -viewport_height, 0);
+        auto viewport_u = viewport_width * u;
+        auto viewport_v = viewport_height * -v;
 
         // Calculate the horizontal and vertical delta vectors from pixel to pixel.
         pixel_delta_u = viewport_u / image_width;
         pixel_delta_v = viewport_v / image_height;
 
         // Calculate the location of the upper left pixel.
-        auto viewport_upper_left =
-            center - Vect(0, 0, focal_length) - viewport_u/2 - viewport_v/2;
+        auto viewport_upper_left = center - (focus_dist * w) - viewport_u/2 - viewport_v/2;
         pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+
+        // Calculate the defocus disk vectors.
+        auto defocus_radius = focus_dist * std::tan(degrees_to_radians(defocus_angle / 2));
+        defocus_disk_u = defocus_radius * u;
+        defocus_disk_v = defocus_radius * v;
     }
 
 void camera::render(const object& world, std::ostream& out) {
@@ -77,15 +91,12 @@ color camera::ray_color(const Ray& r, const object& world, int depth) const {
 }
 
 Ray camera::get_ray(int i, int j) const {
-        // Construct a camera ray originating from the origin and directed at randomly sampled
-        // point around the pixel location i, j.
-
         auto offset = sample_square();
         auto pixel_sample = pixel00_loc
                           + ((i + offset.getX()) * pixel_delta_u)
                           + ((j + offset.getY()) * pixel_delta_v);
 
-        auto ray_origin = center;
+        auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
         auto ray_direction = pixel_sample - ray_origin;
 
         return Ray(ray_origin, ray_direction);
@@ -94,4 +105,10 @@ Ray camera::get_ray(int i, int j) const {
 Vect camera::sample_square() const {
     // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
     return Vect(random_double() - 0.5, random_double() - 0.5, 0);
+}
+
+Vect camera::defocus_disk_sample() const {
+    // Returns a random point in the defocus disk.
+    auto p = random_in_unit_disk();
+    return center + (p.getX() * defocus_disk_u) + (p.getY() * defocus_disk_v);
 }
