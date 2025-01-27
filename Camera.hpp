@@ -3,6 +3,8 @@
 
 #include "Object.hpp"
 #include "Color.hpp"
+#include <thread>
+#include <mutex>
 
 class camera {
   public:

@@ -41,7 +41,8 @@ void camera::initialize() {
         defocus_disk_u = defocus_radius * u;
         defocus_disk_v = defocus_radius * v;
     }
-
+    
+/* version originelle
 void camera::render(const object& world, std::ostream& out) {
     initialize();
 
@@ -57,6 +58,51 @@ void camera::render(const object& world, std::ostream& out) {
 
             write_color(out, pixel_sample_scale * pixel_color);
         }
+    }
+}
+*/
+
+/*version multithreading*/
+
+void camera::render(const object& world, std::ostream& out) {
+    initialize();
+
+    out << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+
+    std::vector<std::thread> threads;
+    std::mutex mutex;
+    int num_threads = std::thread::hardware_concurrency();
+    std::vector<std::stringstream> buffers(num_threads);
+    int rows_per_thread = image_height / num_threads;
+
+    auto render_row_range = [&](int start_row, int end_row, int thread_id) {
+        std::stringstream& buffer = buffers[thread_id];
+        for (int j = start_row; j < end_row; ++j) {
+            for (int i = 0; i < image_width; ++i) {
+                color pixel_color(0, 0, 0);
+                for (int sample = 0; sample < samples_per_pixel; sample++) {
+                    Ray r = get_ray(i, j);
+                    pixel_color += ray_color(r, world, max_depth);
+                }
+
+                std::lock_guard<std::mutex> lock(mutex);
+                write_color(buffer, pixel_sample_scale * pixel_color);
+            }
+        }
+    };
+
+    for (int t = 0; t < num_threads; ++t) {
+        int start_row = t * rows_per_thread;
+        int end_row = (t == num_threads - 1) ? image_height : start_row + rows_per_thread;
+        threads.emplace_back(render_row_range, start_row, end_row, t);
+    }
+
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
+    for (const auto& buffer : buffers) {
+        out << buffer.str();
     }
 }
 
