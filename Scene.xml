@@ -49,20 +49,14 @@
         </material>
     </object>-->
 
-    <object type="sphere">
-        <position x="0" y="-100.5" z="-1" />
-        <radius>100</radius>
-        <material type="lambertian">
-            <color r="0.5" g="0.5" b="0.5" />
-        </material>
-    </object>
+        <object type="sphere">
+            <position x="4" y="1" z="0" />
+            <radius>0.5</radius>
+            <material type="lambertian">
+                <color r="1" g="0" b="0.5" />
+            </material>
+        </object>
 
-    <object type="sphere">
-        <position x="0" y="0" z="-1" />
-        <radius>0.5</radius>
-        <material type="lambertian">
-            <color r="0.5" g="0.5" b="0.5" />
-        </material>
-    </object>
+
     </objects>
 </scene>

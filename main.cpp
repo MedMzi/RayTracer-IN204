@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     camera cam;
 
     // Charger la scène depuis un fichier XML
-    loadScene("/home/takoua/Documents/RayTracer-IN204-main(3)/RayTracer-IN204-main/Scene.xml", w, cam);
+    loadScene("Scene.xml", w, cam);
 
     // Rendu
     cam.render(w, image_file);

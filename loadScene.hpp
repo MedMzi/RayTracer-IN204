@@ -7,7 +7,11 @@
 #include "Material.hpp"
 #include <tinyxml2.h>
 
+using namespace tinyxml2;
+
 // Déclaration de la fonction loadScene
 void loadScene(const char* filePath, world& w, camera& cam);
+
+material* loadMaterial(XMLElement* materialElement);
 
 #endif

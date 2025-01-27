@@ -97,102 +97,116 @@ void loadScene(const char* filePath, world& w, camera& cam) {
     XMLElement* objectsElement = root->FirstChildElement("objects");
     if (objectsElement) {
         for (XMLElement* object = objectsElement->FirstChildElement("object"); object != nullptr; object = object->NextSiblingElement("object")) {
-            const char* type = object->Attribute("type");
-            
+            std::string type = std::string(object->Attribute("type"));
+        
 
-                if (std::string(type) == "sphere") {
-                    // Charger un objet de type Sphere
-                    XMLElement* position = object->FirstChildElement("position");
-
-                    if (position) {
-                        double x = position->DoubleAttribute("x");
-                        double y = position->DoubleAttribute("y");
-                        double z = position->DoubleAttribute("z");
-                        double radius = object->FirstChildElement("radius")->DoubleText();//had hnee ya9ra mriguell 
-                        //w.add(new Sphere(Vect(x, y, z), radius,  new lambertian(color(0.5,0.5,0.5))));//kif nzid ligne hedhi w na3tih des valeurs par def yemchi zeda labes 
-                        // Charger le matérial
-                        XMLElement* materialElement = object->FirstChildElement("material");
-                        std::cout << "Material : " << materialElement << std::endl;//hnee ya3tini fi 0 hatitha bech net2ked win l mochkla 
-                        if (materialElement ) {//yaani mech 93ed yodhkhel fel boucle 
-                            std::cout << "Material : " << materialElement ->GetText() << std::endl;
-                            const char* materialText = materialElement->GetText();
-                            if (std::string(materialText) == "lambertian")
-                            {
-                                XMLElement* co = object->FirstChildElement("color");
-                                if (co) {
-                                    double r = co->DoubleAttribute("r");
-                                    double g = co->DoubleAttribute("g");
-                                    double b = co->DoubleAttribute("b");
-                                    w.add(new Sphere(Vect(x, y, z), radius,  new lambertian(color(r,g,b))));}
-                        } 
-                        /*if (materialElement) {
-                            
-                            const char* materialType = materialElement->Attribute("type");
-
-                            if (std::string(materialType) == "lambertian") {
-                                XMLElement* albedo = materialElement->FirstChildElement("color");
-                                if (albedo) {
-                                    double r = albedo->DoubleAttribute("r");
-                                    double g = albedo->DoubleAttribute("g");
-                                    double b = albedo->DoubleAttribute("b");
-                                    //mat = new lambertian(color(r, g, b));
-                                    //w.add(new Sphere(Vect(x, y, z), radius,  new lambertian(color(r, g, b))));
-
-                                }
-                            }else if (std::string(materialType) == "metal") {
-                                XMLElement* albedo = materialElement->FirstChildElement("albedo");
-                                double fuzz = materialElement->FirstChildElement("fuzz")->DoubleText();
-                                if (albedo) {
-                                    double r = albedo->DoubleAttribute("r");
-                                    double g = albedo->DoubleAttribute("g");
-                                    double b = albedo->DoubleAttribute("b");
-                                    //mat = new metal(color(r, g, b), fuzz);
-                                    w.add(new Sphere(Vect(x, y, z), radius, new metal(color(r, g, b), fuzz)));
-                                }
-                            } else if (std::string(materialType) == "dielectric") {
-                                double refractionIndex = materialElement->FirstChildElement("refraction_index")->DoubleText();
-                                //mat = new dielectric(refractionIndex);
-                                w.add(new Sphere(Vect(x, y, z), radius, new dielectric(refractionIndex)));
-
-                            }
-                        }
-
-                        /*if (mat) {
-                            //materials.push_back(mat);
-                            w.add(new Sphere(Vect(x, y, z), radius, mat));
-                        }*/
-                       //w.add(new Sphere(Vect(x, y, z), radius,new lambertian(color(0.5, 0.5, 0.5))));
-                    }
-                }
-                /*else if (std::string(type) == "rectangle") {
-                // Charger un objet de type Rectangle
+            if (type == "sphere") {
+                // Charger un objet de type Sphere
                 XMLElement* position = object->FirstChildElement("position");
+
                 if (position) {
                     double x = position->DoubleAttribute("x");
                     double y = position->DoubleAttribute("y");
                     double z = position->DoubleAttribute("z");
+                    double radius = object->FirstChildElement("radius")->DoubleText();//had hnee ya9ra mriguell 
 
-                    XMLElement* sizeElement = object->FirstChildElement("size");
-                    XMLElement* dimensionsElement = object->FirstChildElement("dimensions");
 
-                    if (sizeElement) {
-                        // Si l'élément 'size' est présent, le rectangle est défini par deux coins opposés
-                        double x2 = sizeElement->DoubleAttribute("x2");
-                        double y2 = sizeElement->DoubleAttribute("y2");
-                        double z2 = sizeElement->DoubleAttribute("z2");
+                    XMLElement* materialElement = object->FirstChildElement("material");
+                    w.add(new Sphere(Vect(x, y, z), radius,  loadMaterial(materialElement)));
+                }
+            }
+            else if (type == "cube"){
+                XMLElement* position = object->FirstChildElement("position");
 
-                        w.add(new Rectangle(Vect(x, y, z), Vect(x2, y2, z2),ground_material));
-                    } else if (dimensionsElement) {
-                        // Si l'élément 'dimensions' est présent, le rectangle est défini par un centre et des dimensions
-                        double a = dimensionsElement->DoubleAttribute("a");
-                        double b = dimensionsElement->DoubleAttribute("b");
-                        double c = dimensionsElement->DoubleAttribute("c");
+                if (position) {
+                    double x = position->DoubleAttribute("x");
+                    double y = position->DoubleAttribute("y");
+                    double z = position->DoubleAttribute("z");
+                    double edge = object->FirstChildElement("edge")->DoubleText();
 
-                        w.add(new Rectangle(Vect(x, y, z), a, b, c,ground_material));
+
+                    XMLElement* materialElement = object->FirstChildElement("material");
+                    w.add(new Rectangle(Vect(x, y, z), edge,  loadMaterial(materialElement)));
+                }
+
+            }
+            else if (type == "rectangle"){
+                XMLElement* position = object->FirstChildElement("position");
+
+                if (position) {
+                    double x = position->DoubleAttribute("x");
+                    double y = position->DoubleAttribute("y");
+                    double z = position->DoubleAttribute("z");
+                    
+                    double width = 0.0;
+                    double height = 0.0;
+                    double length = 0.0;
+                    XMLElement* dimensions = object->FirstChildElement("dimensions");
+                    if (dimensions) {
+                        width = dimensions->DoubleAttribute("w");
+                        height = dimensions->DoubleAttribute("h");
+                        length = dimensions->DoubleAttribute("l");
+                    }
+
+                    XMLElement* materialElement = object->FirstChildElement("material");
+                    w.add(new Rectangle(Vect(x, y, z), width, height, length, loadMaterial(materialElement)));
+                }
+
+            }
+            else if (type == "objFile"){
+                XMLElement* filenameElement = object->FirstChildElement("filename"); // Replace "filename" with the actual element name
+                if (filenameElement) {
+                    const char* filenameCStr = filenameElement->GetText(); 
+                    std::string filename(filenameCStr);  
+
+                XMLElement* position = object->FirstChildElement("position");
+                    if (position) {
+                        double x = position->DoubleAttribute("x");
+                        double y = position->DoubleAttribute("y");
+                        double z = position->DoubleAttribute("z");
+
+                        w.add(new dotobj(filename, Vect(x, y, z))); 
                     }
                 }
             }
-        }*/
-    }
+
+        }
+    }      
 }
-}}
+
+material* loadMaterial(XMLElement* materialElement){
+    if (materialElement == nullptr) {
+        throw std::invalid_argument("materialElement is empty");
+    }
+
+    std::string materialText = std::string(materialElement->Attribute("type"));
+
+    if (materialText == "lambertian"){
+        XMLElement* co = materialElement->FirstChildElement("color");
+        if (co) {
+            double r = co->DoubleAttribute("r");
+            double g = co->DoubleAttribute("g");
+            double b = co->DoubleAttribute("b");
+            return new lambertian(color(r,g,b));  
+        }
+    }
+    else if (materialText == "metal"){
+        XMLElement* co = materialElement->FirstChildElement("color");
+        if (co) {
+            double r = co->DoubleAttribute("r");
+            double g = co->DoubleAttribute("g");
+            double b = co->DoubleAttribute("b");
+            double f = materialElement->FirstChildElement("fuzz")->DoubleText();
+            return new metal(color(r,g,b),f);
+        }
+    }
+    else if (materialText == "dielectric"){
+        XMLElement* ri = materialElement->FirstChildElement("refraction_index");
+        if (ri) {
+            double refraction_index = ri->DoubleText();
+            return new dielectric(refraction_index);
+        }
+    } 
+    //si tout se passe mal on va juste retourner un solide blanc
+    return new lambertian(color(1,1,1));
+}
