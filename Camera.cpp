@@ -43,7 +43,7 @@ void camera::initialize() {
     }
     
 /* version originelle
-void camera::render(const object& world, std::ostream& out) {
+void camera::render(const world& w, std::ostream& out) {
     initialize();
 
     out << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -53,7 +53,7 @@ void camera::render(const object& world, std::ostream& out) {
             color pixel_color(0, 0, 0);
             for (int sample = 0; sample < samples_per_pixel; sample++){
                 Ray r = get_ray(i,j);
-                pixel_color += ray_color(r, world, max_depth);
+                pixel_color += ray_color(r, w, max_depth);
             }
 
             write_color(out, pixel_sample_scale * pixel_color);
