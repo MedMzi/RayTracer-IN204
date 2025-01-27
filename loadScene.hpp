@@ -12,6 +12,6 @@ using namespace tinyxml2;
 // Déclaration de la fonction loadScene
 void loadScene(const char* filePath, world& w, camera& cam);
 
-material* loadMaterial(XMLElement* materialElement);
+std::shared_ptr<material> loadMaterial(XMLElement* materialElement);
 
 #endif

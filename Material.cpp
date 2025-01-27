@@ -1,11 +1,5 @@
 #include "Material.hpp"
 
-object::~object() {
-    if (mat != nullptr) {
-        delete mat;
-        mat = nullptr;
-    }
-}
 
 bool material::scatter(const Ray& r_in, const RayIntersection& inters, color& attenuation, Ray& scattered) const{
     return false;

@@ -174,7 +174,7 @@ void loadScene(const char* filePath, world& w, camera& cam) {
     }      
 }
 
-material* loadMaterial(XMLElement* materialElement){
+std::shared_ptr<material> loadMaterial(XMLElement* materialElement){
     if (materialElement == nullptr) {
         throw std::invalid_argument("materialElement is empty");
     }
@@ -187,7 +187,7 @@ material* loadMaterial(XMLElement* materialElement){
             double r = co->DoubleAttribute("r");
             double g = co->DoubleAttribute("g");
             double b = co->DoubleAttribute("b");
-            return new lambertian(color(r,g,b));  
+            return std::make_shared<lambertian>(color(r,g,b));  
         }
     }
     else if (materialText == "metal"){
@@ -197,16 +197,16 @@ material* loadMaterial(XMLElement* materialElement){
             double g = co->DoubleAttribute("g");
             double b = co->DoubleAttribute("b");
             double f = materialElement->FirstChildElement("fuzz")->DoubleText();
-            return new metal(color(r,g,b),f);
+            return std::make_shared<metal>(color(r,g,b),f);
         }
     }
     else if (materialText == "dielectric"){
         XMLElement* ri = materialElement->FirstChildElement("refraction_index");
         if (ri) {
             double refraction_index = ri->DoubleText();
-            return new dielectric(refraction_index);
+            return std::make_shared<dielectric>(refraction_index);
         }
     } 
     //si tout se passe mal on va juste retourner un solide blanc
-    return new lambertian(color(1,1,1));
+    return std::make_shared<lambertian>(color(1,1,1));
 }

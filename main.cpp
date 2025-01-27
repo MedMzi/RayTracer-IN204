@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 
     // Charger la scène depuis un fichier XML
     loadScene("Scene.xml", w, cam);
-
+    
     // Rendu
     cam.render(w, image_file);
 

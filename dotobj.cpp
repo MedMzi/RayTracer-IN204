@@ -15,7 +15,7 @@ void dotobj::loadFromObjFile(const std::string& filename, Vect position) {
         throw std::runtime_error("Impossible d'ouvrir le fichier .obj");
     }
 
-    material* default_mat = new lambertian(color(0.0, 0.0, 0.0));   //en attendant d'implémenter le support pour les textures
+    mat = std::make_shared<lambertian>(color(0.0, 0.0, 0.0));   //en attendant d'implémenter le support pour les textures
 
     std::vector<Vect> vertices;
     std::string line;
@@ -45,7 +45,7 @@ void dotobj::loadFromObjFile(const std::string& filename, Vect position) {
             }
             if (vertexIndices.size() >= 3) {
                 for (size_t i = 1; i < vertexIndices.size() - 1; ++i) {
-                    triangles.push_back(Triangle(vertices[vertexIndices[0]], vertices[vertexIndices[i]], vertices[vertexIndices[i + 1]], default_mat));
+                    triangles.push_back(Triangle(vertices[vertexIndices[0]], vertices[vertexIndices[i]], vertices[vertexIndices[i + 1]], mat));
                     //todo remove nullptr here and figure out how to include materials into the dotobj, maybe just a default material for all dotobjs
                 }
             }
@@ -61,7 +61,7 @@ double dotobj::hit(const Ray& r) const {
                 tmin = t;
                 center = triangle.getCenter();
                 norm = triangle.getNormal();
-                mat = triangle.mat;
+ //               mat = triangle.mat;
             }
         }
         if (tmin == ray_tmax) {

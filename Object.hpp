@@ -2,6 +2,7 @@
 #define OBJECT_HPP
 
 #include "Color.hpp"
+#include <memory>
 
 class material;
 
@@ -10,17 +11,19 @@ class object {
         mutable Vect center;
         mutable Vect norm;
     public:
-        mutable material* mat;
+        mutable std::shared_ptr<material> mat = nullptr;
 
         double ray_tmin = 0.0001;
         double ray_tmax = INFINITY;
 
-        virtual ~object();
+        virtual ~object()
+            {}
         
         object() : object(nullptr) 
             {}
-        object(material* m) : mat(m)
-             {}
+
+        object(std::shared_ptr<material> m) : mat(m)
+            {}
 
         virtual double hit(const Ray& r) const = 0;
         virtual const Vect& getNormal(const Vect& p = Vect()) const {
@@ -62,7 +65,7 @@ class RayIntersection {
         double getHit() const;
         bool isOutside() const;
 
-        material* mat;
+        std::shared_ptr<material> mat;
 
 
 
@@ -76,16 +79,16 @@ class Sphere : public object{
         Sphere() : Sphere(Vect(), 1.0, nullptr) 
             {}
         
-        Sphere(const Vect& center, material* m) : Sphere(center, 1.0, m) 
+        Sphere(const Vect& center, std::shared_ptr<material> m) : Sphere(center, 1.0, m) 
             {}
         
-        Sphere(double radius, material* m) : Sphere(Vect(), std::fabs(radius), m) 
+        Sphere(double radius, std::shared_ptr<material> m) : Sphere(Vect(), std::fabs(radius), m) 
             {}
 
         Sphere(const Sphere& a) : Sphere(a.center, a.radius, a.mat) 
             {}
         
-        Sphere(const Vect& Center, double radius, material* m) : object(m) , radius(std::fabs(radius)) {
+        Sphere(const Vect& Center, double radius, std::shared_ptr<material> m) : object(m) , radius(std::fabs(radius)) {
             center = Center;
             }
 
@@ -111,16 +114,16 @@ public:
     Rectangle() : Rectangle(Vect(), Vect(1.0, 1.0, 1.0), nullptr) 
         {}
 
-    Rectangle(const Vect& center, double a, double b, double c, material* m) : Rectangle(center - Vect(a/2, b/2, c/2), center + Vect(a/2, b/2, c/2), m)
+    Rectangle(const Vect& center, double a, double b, double c, std::shared_ptr<material> m) : Rectangle(center - Vect(a/2, b/2, c/2), center + Vect(a/2, b/2, c/2), m)
         {}
 
-    Rectangle(const Vect& center, double a, material* m) : Rectangle(center - Vect(a/2, a/2, a/2), center + Vect(a/2, a/2, a/2), m)
+    Rectangle(const Vect& center, double a, std::shared_ptr<material> m) : Rectangle(center - Vect(a/2, a/2, a/2), center + Vect(a/2, a/2, a/2), m)
         {}
 
     Rectangle(const Rectangle& a) : Rectangle(a.minCorner, a.maxCorner, a.mat)   
         {}
 
-    Rectangle(const Vect& corner1, const Vect& corner2, material* m) : object(m) {
+    Rectangle(const Vect& corner1, const Vect& corner2, std::shared_ptr<material> m) : object(m) {
         minCorner = Vect(
             fmin(corner1.getX(), corner2.getX()),
             fmin(corner1.getY(), corner2.getY()),
@@ -158,7 +161,7 @@ public:
     virtual double hit(const Ray& r) const override;
 };
 
-class Triangle : public object {
+class Triangle : public object {    //les triangles qui vont constituer les polygones du modele blender (dotobj)
     private:
         Vect A;
         Vect B;
@@ -171,7 +174,7 @@ class Triangle : public object {
         Triangle(const Triangle& a) : Triangle(a.A, a.B, a.C, a.mat)
             {}
 
-        Triangle(const Vect& a, const Vect& b, const Vect& c, material* m) : object(m), A(a), B(b), C(c){
+        Triangle(const Vect& a, const Vect& b, const Vect& c, std::shared_ptr<material> m) : object(m), A(a), B(b), C(c){
             center = (A + B + C) / 3;
             Vect edge1 = B - A;
             Vect edge2 = C - A;
@@ -223,9 +226,6 @@ class dotobj : public object {  // for .obj file
             center = center / totalArea ; 
         }
 
-        ~dotobj() {
-            mat = nullptr;
-        }
 
         void loadFromObjFile(const std::string& filename, Vect position = Vect()); //charge un fichier .obj
 
