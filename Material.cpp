@@ -3,6 +3,7 @@
 object::~object() {
     if (mat != nullptr) {
         delete mat;
+        mat = nullptr;
     }
 }
 
