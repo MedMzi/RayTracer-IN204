@@ -101,3 +101,7 @@ const Vect& Rectangle::getNormal(const Vect& p) const {
     // pour eviter les erreurs
     return norm;
 }
+
+object* Rectangle::clone() const{
+    return new Rectangle(*this);
+}

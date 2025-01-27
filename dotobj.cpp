@@ -70,3 +70,8 @@ double dotobj::hit(const Ray& r) const {
 
         return tmin;
     }
+
+
+object* dotobj::clone() const{
+    return new dotobj(*this);
+}

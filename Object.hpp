@@ -26,6 +26,8 @@ class object {
             {}
 
         virtual double hit(const Ray& r) const = 0;
+        virtual object* clone() const = 0;
+
         virtual const Vect& getNormal(const Vect& p = Vect()) const {
             return norm;
         };
@@ -102,6 +104,7 @@ class Sphere : public object{
         virtual const Vect& getNormal(const Vect& p) const override;
 
         virtual double hit(const Ray& r) const override;
+        virtual object* clone() const override;
 
 };
 
@@ -159,6 +162,7 @@ public:
     void setMaxCorner(const Vect& c);
 
     virtual double hit(const Ray& r) const override;
+    virtual object* clone() const override;
 };
 
 class Triangle : public object {    //les triangles qui vont constituer les polygones du modele blender (dotobj)
@@ -193,6 +197,7 @@ class Triangle : public object {    //les triangles qui vont constituer les poly
         const double area() const;  //aire
 
         virtual double hit(const Ray& r) const override;
+        virtual object* clone() const override;
 };
 
 class dotobj : public object {  // for .obj file
@@ -233,6 +238,7 @@ class dotobj : public object {  // for .obj file
         const Vect& getPosition() const;
 
         virtual double hit(const Ray& r) const override;
+        virtual object* clone() const override;
 };
 
 class world : public object {
@@ -245,6 +251,10 @@ class world : public object {
         }
 
         world(const world& a) : object(), objects(a.objects){
+            for (const auto& obj : a.objects) {
+                objects.push_back(obj->clone()); // Use clone method for deep copy
+            }
+
             center = a.getCenter();
         }
 
@@ -252,12 +262,15 @@ class world : public object {
             for (object* obj : objects) {
                 delete obj;
             }
+            objects.clear();
             mat = nullptr;
         }
 
         void add(object* obj);
 
         virtual double hit(const Ray& r) const override;
+
+        virtual object* clone() const override;
 };
 
 #endif

@@ -64,7 +64,7 @@ void camera::render(const object& world, std::ostream& out) {
 
 /*version multithreading*/
 
-void camera::render(const object& world, std::ostream& out) {
+void camera::render(const world& w, std::ostream& out) {
     initialize();
 
     out << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -75,14 +75,20 @@ void camera::render(const object& world, std::ostream& out) {
     std::vector<std::stringstream> buffers(num_threads);
     int rows_per_thread = image_height / num_threads;
 
+    std::vector<std::unique_ptr<world>> world_copies(num_threads);
+    for (int t = 0; t < num_threads; ++t) {
+        world_copies[t] = std::make_unique<world>(w);
+    }
+
     auto render_row_range = [&](int start_row, int end_row, int thread_id) {
         std::stringstream& buffer = buffers[thread_id];
+        world& thread_world = *world_copies[thread_id];
         for (int j = start_row; j < end_row; ++j) {
             for (int i = 0; i < image_width; ++i) {
                 color pixel_color(0, 0, 0);
                 for (int sample = 0; sample < samples_per_pixel; sample++) {
                     Ray r = get_ray(i, j);
-                    pixel_color += ray_color(r, world, max_depth);
+                    pixel_color += ray_color(r, thread_world, max_depth);
                 }
 
                 std::lock_guard<std::mutex> lock(mutex);
@@ -90,21 +96,26 @@ void camera::render(const object& world, std::ostream& out) {
             }
         }
     };
-
+    
     for (int t = 0; t < num_threads; ++t) {
         int start_row = t * rows_per_thread;
         int end_row = (t == num_threads - 1) ? image_height : start_row + rows_per_thread;
         threads.emplace_back(render_row_range, start_row, end_row, t);
     }
-
+    
     for (auto& thread : threads) {
         thread.join();
     }
-
+    
     for (const auto& buffer : buffers) {
-        out << buffer.str();
+        out << buffer.str();    //resultat finaux
+    }
+
+    for (auto& ptr : world_copies) {
+        ptr.release(); // Relacher les pointeurs qui ont deja ete libere dans les threads
     }
 }
+
 
 color camera::ray_color(const Ray& r, const object& world, int depth) const {
     if (depth <= 0){

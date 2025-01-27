@@ -23,7 +23,7 @@ class camera {
     double defocus_angle = 0.0; //angle de defocalisation
     double focus_dist = 10.0; //distance de focalisation
 
-    void render(const object& world, std::ostream& out) ;
+    void render(const world& w, std::ostream& out) ;
 
   private:
     int    image_height;   // Rendered image height

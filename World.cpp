@@ -22,3 +22,7 @@ double world::hit(const Ray& r) const {
 
     return closest;
 }
+
+object* world::clone() const {
+    return new world(*this);
+}

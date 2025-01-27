@@ -45,3 +45,7 @@ double Sphere::hit(const Ray& r) const {
     //retourner -1 pour éviter toute confusion
     return -1.0;
 }
+
+object* Sphere::clone() const {
+        return new Sphere(*this);
+}

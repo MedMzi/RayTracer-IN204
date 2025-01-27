@@ -44,3 +44,7 @@ double Triangle::hit(const Ray& r) const {      //on utilise l'algorithme de Mö
     }
     return -1.0;
 }
+
+object* Triangle::clone() const{
+    return new Triangle(*this);
+}
