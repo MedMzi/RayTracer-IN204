@@ -1,0 +1,61 @@
+ <scene>
+    <camera>
+        <aspect_ratio>1.7</aspect_ratio>
+        <image_width>400</image_width>
+        <samples_per_pixel>100</samples_per_pixel>
+        <max_depth>50</max_depth>
+        <vfov>20</vfov>
+        <lookfrom>
+            <x>13</x>
+            <y>2</y>
+            <z>3</z>
+        </lookfrom>
+        <lookat>
+            <x>-2</x>
+            <y>0</y>
+            <z>0</z>
+        </lookat>
+        <vup>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </vup>
+        <defocus_angle>0.6</defocus_angle>
+        <focus_dist>10.0</focus_dist>
+    </camera>
+    <objects>
+
+        <!-- Sphère dorée (métal) -->
+        <object type="sphere">
+            <position x="1.5" y="0.5" z="-0.5" />
+            <radius>0.5</radius>
+            <material type="metal">
+                <color r="0.8" g="0.6" b="0.2" />
+                <fuzz>0.0</fuzz>
+            </material>
+        </object>
+
+        <object type="sphere">
+            <position x="0" y="-1000" z="0" />
+            <radius>1000.0</radius>
+            <material type="lambertian">
+                <color r="0.1" g="0.2" b="0.5" />
+            </material>
+        </object>
+        <object type="sphere">
+            <position x="-2.0" y="0.0" z="0.0" />
+            <radius>1.0</radius>
+            <material type="metale">
+                <color r="0.1" g="0.2" b="0.3" />
+            </material>
+        </object>
+        <object type="rectangle">
+            <position x="2.50" y="0.0" z="0.0" />
+            <dimensions w="1.0" h="1.50" l="1.5" />
+            <material type="metal">
+                <color r="0.8" g="0" b="0.2" />
+                <fuzz>0.3</fuzz>
+            </material>
+        </object>
+    </objects>
+</scene>

@@ -37,7 +37,7 @@
         <position x="0" y="-1000" z="0" />
         <radius>1000.0</radius>
         <material type="lambertian">
-            <color r="1" g="1" b="1" />
+            <color r="0" g="0" b="0.5" />
         </material>
     </object>
 
@@ -51,9 +51,9 @@
 
         <object type="sphere">
             <position x="0" y="1" z="0" />
-            <radius>0.9</radius>
-            <material type="lambertian">
-                <color r="1" g="0" b="0.5" />
+            <radius>0.8</radius>
+            <material type="dielectric">
+                <refraction_index>1.5</refraction_index>
             </material>
         </object>
 
