@@ -25,6 +25,7 @@ add_executable(raytracer
     RayIntersect.cpp
     Material.cpp
     loadScene.cpp
+    MoteurVersion1.cpp
 )
 
 # Include directories
