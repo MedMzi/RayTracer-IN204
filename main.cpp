@@ -1,37 +1,18 @@
-#include "Color.hpp"
-#include "Object.hpp"
-#include "Camera.hpp"
-#include "loadScene.hpp"
-#include <fstream>
-#include <iostream>
-
-#include <chrono>
+#include "MoteurVersion1.hpp"
 
 int main(int argc, char** argv) {
+    // Fichiers de scène et de sortie
+    const std::string scene_file = "Scene.xml";
+    const std::string output_file = "output.ppm";
 
-    auto start = std::chrono::high_resolution_clock::now();
+    // Utilisation du moteur version 1
+    Moteur* moteur = new MoteurVersion1(scene_file, output_file);
 
-    // Ouvrir un fichier pour écrire l'image
-    std::ofstream image_file("output.ppm");
-    if (!image_file) {
-        std::cerr << "Erreur : impossible de créer le fichier image.\n";
-        return 1;
-    }
+    // Exécution
+    moteur->executer();
 
-    world w;
-    camera cam;
-
-    // Charger la scène depuis un fichier XML
-    loadScene("Scene.xml", w, cam);
-    // Rendu
-    cam.render(w, image_file);
-    std::cout << "Image générée dans le fichier 'output.ppm'.\n";
-    image_file.close();
-
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration = end - start;
-    std::cout << "Exec time: " << duration.count() << " seconds" << std::endl;
-
+    // Nettoyage
+    delete moteur;
 
     return 0;
 }
