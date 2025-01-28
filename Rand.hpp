@@ -28,7 +28,7 @@ inline Vect random_unit_vector() {
 
 inline Vect random_on_hemisphere(const Vect& normal) {
     Vect on_unit_sphere = random_unit_vector();
-    if (on_unit_sphere*normal > 0.0) // In the same hemisphere as the normal
+    if (on_unit_sphere*normal > 0.0) // meme hemisphere que normal
         return on_unit_sphere;
     else
         return -on_unit_sphere;

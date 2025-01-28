@@ -252,7 +252,7 @@ class world : public object {
 
         world(const world& a) : object(), objects(a.objects){
             for (const auto& obj : a.objects) {
-                objects.push_back(obj->clone()); // Use clone method for deep copy
+                objects.push_back(obj->clone()); // cloner pour deep copy
             }
 
             center = a.getCenter();

@@ -8,11 +8,11 @@
 
 class camera {
   public:
-    double aspect_ratio = 1.0;  // Ratio of image width over height
+    double aspect_ratio = 1.0;  // Ratio image width / height
     int image_width  = 100;  // Rendered image width in pixel count
     int samples_per_pixel = 10; 
     int max_depth = 10; // limiter le nombre de rebonds pour ne pas avoir de boucle infinie ou de stack overflow
-    double vfov = 90;  // Vertical view angle (field of view) in degrees
+    double vfov = 90;  // angle de vu vertical (field of view) en degrees
 
     //orientation de la camera
     Vect lookfrom = Vect(0,0,0);  //point de vue de la camera
