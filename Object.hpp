@@ -250,7 +250,7 @@ class world : public object {
             center = Vect();
         }
 
-        world(const world& a) : object(), objects(a.objects){
+        world(const world& a) : object(), objects(){
             for (const auto& obj : a.objects) {
                 objects.push_back(obj->clone()); // cloner pour deep copy
             }
@@ -263,7 +263,6 @@ class world : public object {
                 delete obj;
             }
             objects.clear();
-            mat = nullptr;
         }
 
         void add(object* obj);

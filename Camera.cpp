@@ -106,10 +106,6 @@ void camera::render(const world& w, std::ostream& out) {
     for (const auto& buffer : buffers) {
         out << buffer.str();    //resultat finaux
     }
-
-    for (auto& ptr : world_copies) {
-        ptr.release(); // Relacher les pointeurs qui ont deja ete libere dans les threads
-    }
 }
 
 
