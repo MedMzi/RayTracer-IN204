@@ -11,13 +11,13 @@ int main(int argc, char** argv) {
     const std::string output_file = "output.ppm";
 
     // Utilisation du moteur version 1
-    std::unique_ptr<Moteur> moteur = std::make_unique<MoteurVersion1>(scene_file, output_file);
+    Moteur* moteur = new MoteurVersion1(scene_file, output_file);
 
     // Exécution
     moteur->executer();
 
     // Nettoyage
- //   delete moteur;
+    delete moteur;
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
